@@ -1,0 +1,75 @@
+body {
+    margin: 0 auto;
+    width: 1024px;
+    font: 13px/22px Helvetica, Arial, sans-serif;
+    background: #f0f0f0;
+}
+
+header {
+    margin-bottom: 47px;
+}
+header h1 a {
+    font-size: 70px;
+    text-decoration: none;
+    color: black;
+    text-shadow: #555 4px 4px 4px;
+}
+
+h2 {
+    font-size: 28px;
+    line-height: 44px;
+    padding: 22px 0;
+}
+
+h3 {
+    font-size: 18px;
+    line-height: 22px;
+    padding: 11px 0;
+}
+
+p {
+    padding-bottom: 22px;
+}
+
+#Content {
+    display: table;
+}
+
+#MainContent {
+    display: table-cell;
+    width: 820px;
+    padding-left: 10px;
+}
+    #MainContent section.entry {
+        background-color: white;
+        padding: 10px;
+        border-radius: 10px;
+        -webkit-border-radius: 10px;  /* Safari、Google Chrome */
+        -moz-border-radius: 10px;    /* Firefox */
+        margin-bottom: 10px;
+        -webkit-box-shadow: #244766 5px 5px 10px;
+        -moz-box-shadow: #244766 10px 10px 10px;
+        box-shadow: #244766 10px 10px 10px;
+    }
+    #MainContent section.entry .entry-footer {
+        text-align: right;
+        font-size: xx-small;
+    }
+
+aside {
+    display: table-cell;
+    width: 300px;
+    border-right: 1px solid #cccccc;
+    vertical-align: top;
+}
+
+form.post input[type="submit"] {
+    font-size: xx-large;
+}
+form.post {
+    text-align: center;
+}
+
+.pager {
+    text-align: center;
+}

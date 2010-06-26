@@ -1,0 +1,8 @@
+[% FOR hist IN search_histories %]
+    <h3>[% hist.date %]</h3>
+    <ul>
+    [% FOR word IN hist.words %]
+        <li><a href="/search?word=[% uri_escape_utf8(word) %]">[% word %]</a></li>
+    [% END %]
+    </ul>
+[% END %]

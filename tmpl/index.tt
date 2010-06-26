@@ -1,0 +1,52 @@
+[% WRAPPER 'wrapper.tt' %]
+
+<div id="Content">
+    <aside><!-- side bar -->
+        <form method="get" action="/search" class="search">
+            <input type="text" name="word" value="[% word // '' %]" />
+            <input type="submit" value="search" />
+        </form>
+        <div id="SearchHistory">
+            Search History Here
+        </div>
+    </aside>
+
+    <div id="MainContent">
+        <section>
+            <form method="post" action="/post" class="post">
+            <textarea name="body" rows="20" cols="90"></textarea><br />
+            <input type="submit" value="send" id="SubmitBtn" />
+            </form>
+        </section>
+
+        [% FOR entry IN entries %]
+        <section class="entry"><!-- body -->
+            <div class="body">[% render_xatena(entry.body) %]</div>
+            <form method="post" action="/update" class="post" id="EditForm[% entry.id %]" style="display: none;">
+                <textarea rows="20" cols='90' name="body">[% entry.body %]</textarea>
+                <input type="hidden" name="entry_id" value="[% entry.id %]" />
+                <input type="submit" value="update" />
+            </form>
+            <div class="entry-footer">
+                <a href="#" class="EditBtn" entry_id="[% entry.id %]">edit</a>
+                <span class="mtime">[% format_unixtime(entry.mtime) %]</span>
+            </div>
+        </section>
+        [% END %]
+
+        <div class="pager">
+            [% IF pager.page()==1 %]
+                &lt;prev
+            [% ELSE %]
+                <a rel="prev" href="[% c().req().uri_with({page => pager.page()-1}) %]">&lt;prev</a>
+            [% END %]
+            [% IF pager.has_next() %]
+                <a rel="next" href="[% c().req().uri_with({page => pager.page()+1}) %]">next&gt;</a>
+            [% ELSE %]
+                next &gt;
+            [% END %]
+        </div>
+    </div>
+</div>
+
+[% END %]
