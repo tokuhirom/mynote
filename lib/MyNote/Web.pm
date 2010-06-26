@@ -83,6 +83,7 @@ package MyNote::Web {
             when ('/update') {
                 my $body = $req->param('body') // die "missing body";
                 $body = decode_utf8($body);
+                $body =~ s/\015\012/\012/g;
                 my $entry_id = $req->param('entry_id') // die "missing entry_id";
 
                 $c->dbh->do(q{UPDATE entry SET body=? WHERE id=?}, {}, $body, $entry_id) == 1 or return $c->show_error("cannot update entry");
@@ -93,6 +94,7 @@ package MyNote::Web {
             when ('/post') {
                 if (my $body = $req->param('body')) {
                     $body = decode_utf8($body);
+                    $body =~ s/\015\012/\012/g;
                     $c->dbh->do(q{INSERT INTO entry (body) VALUES (?)}, {}, $body);
                     $c->dbh->commit;
                 }
