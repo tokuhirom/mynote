@@ -8,13 +8,17 @@ package MyNote {
     use Text::Xatena;
     use Encode;
     use Time::Piece;
+    use File::Spec;
+    our $is_devel = $ENV{PLACK_ENV} eq 'development' ? 1 : 0;
 
     my $xslate = Text::Xslate->new(
-        syntax   => 'TTerse',
-        path     => 'tmpl',
-        cache => 0,
+        syntax => 'TTerse',
+        path   => 'tmpl',
+        cache  => $is_devel ? 0 : 2,
+        cache_dir =>
+          File::Spec->catdir( File::Spec->tmpdir, "xslate.mynote.cache.$<" ),
         function => {
-            c       => sub { MyNote->context },
+            c             => sub { MyNote->context },
             render_xatena => sub {
                 my ($src) = @_;
                 return mark_raw( Text::Xatena->new->format($src) );
