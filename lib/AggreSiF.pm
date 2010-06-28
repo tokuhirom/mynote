@@ -58,7 +58,6 @@ package AggreSiF::Request {
     # code taken from Catalyst::Request
     sub uri_with {
         my( $self, $args, $behavior) = @_;
-        warn "WITH";
 
         Carp::carp( 'No arguments passed to uri_with()' ) unless $args;
 
