@@ -67,7 +67,7 @@ package MyNote::M::SearchHistory {
         }
         my @ret =
           map { +{ date => $_, words => $date_entries->{$_} } }
-          $date_entries->keys->sort;
+          $date_entries->keys->sort->reverse;
         return wantarray ? @ret : \@ret;
     }
     sub update {
