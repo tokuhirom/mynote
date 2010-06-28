@@ -5,7 +5,7 @@ package MyNote::Web;
 # extend context object
 package MyNote {
     use Text::Xslate qw/mark_raw/;
-    use Text::Xatena;
+    use MyNote::Formatter;
     use Encode;
     use Time::Piece;
     use File::Spec;
@@ -21,7 +21,7 @@ package MyNote {
             c             => sub { MyNote->context },
             render_xatena => sub {
                 my ($src) = @_;
-                return mark_raw( Text::Xatena->new->format($src) );
+                return mark_raw( MyNote::Formatter->new->parse($src) );
             },
             format_unixtime => sub {
                 my $t = shift;
