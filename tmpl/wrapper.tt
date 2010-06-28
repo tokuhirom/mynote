@@ -11,6 +11,9 @@
         <title>mynote</title>
         <script type="text/javascript" src="/static/js/jquery-1.4.2.min.js"></script>
         <script src="/static/js/mynote.js?v=5" type="text/javascript"></script>
+        <!--[if !IE]>-->
+        <link media="only screen and (max-device-width: 480px)" href="/static/css/iphone.css" type="text/css" rel="stylesheet" />
+        <!--<![endif]-->
 [% IF is_iphone %]
         <meta name="viewport" content="width=device-width" />
         <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
