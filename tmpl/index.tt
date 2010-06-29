@@ -21,7 +21,7 @@
 
         [% FOR entry IN entries %]
         <section class="entry"><!-- body -->
-            <div class="body">[% render_xatena(entry.body) %]</div>
+            <div class="body">[% entry.body_html %]</div>
             <form method="post" action="/update" class="post" id="EditForm[% entry.id %]" style="display: none;">
                 <textarea rows="20" cols='90' name="body">[% entry.body %]</textarea>
                 <input type="hidden" name="entry_id" value="[% entry.id %]" />

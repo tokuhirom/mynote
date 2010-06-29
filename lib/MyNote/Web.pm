@@ -19,10 +19,6 @@ package MyNote {
           File::Spec->catdir( File::Spec->tmpdir, "xslate.mynote.cache.$<" ),
         function => {
             c             => sub { MyNote->context },
-            render_xatena => sub {
-                my ($src) = @_;
-                return mark_raw( MyNote::Formatter->new->parse($src) );
-            },
             format_unixtime => sub {
                 my $t = shift;
                 Time::Piece->new($t)->strftime('%Y-%m-%d(%a) %H:%M');
