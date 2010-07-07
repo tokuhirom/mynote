@@ -1,6 +1,7 @@
 use 5.13.2;
 use strict;
 use warnings;
+use Plack::Builder;
 use Plack::Loader;
 use Plack::Middleware::Static;
 use MyNote;
@@ -11,7 +12,11 @@ sub sort_by(&@) {
     map { $_->[0] } sort { $a->[1] <=> $b->[1] } map { [$_, $code->($_)] } @_;
 }
 
-my $app = MyNote::Web->handler;
+my $app = builder {
+    enable_if { $_[0]->{REMOTE_ADDR} eq '127.0.0.1' }
+            "Plack::Middleware::ReverseProxy";
+    MyNote::Web->handler;
+};
 $app = Plack::Middleware::Static->wrap(
     $app,
     path => qr{^/static/},
