@@ -1,0 +1,21 @@
+body {
+    width: 480px;
+}
+
+#Content {
+    display: block;
+}
+#MainContent {
+    display: block !important;
+    width: 420px;
+    padding-left: 10px;
+}
+aside {
+    display: block !important;
+    width: 300px;
+    border-right: none;
+    vertical-align: top;
+    border-bottom: 1px solid #cccccc;
+    margin-bottom: 10px;
+}
+

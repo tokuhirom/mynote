@@ -1,10 +1,12 @@
 CREATE TABLE entry (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     body TEXT NOT NULL,
+    body_html TEXT DEFAULT NULL, -- cache
     ctime INT UNSIGNED NOT NULL,
     mtime INT UNSIGNED NOT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB;
+-- ALTER TABLE entry ADD body_html TEXT DEFAULT NULL AFTER body;
 
 CREATE TABLE entry_index (
     entry_id INT UNSIGNED NOT NULL,
@@ -42,9 +44,10 @@ DELIMITER |
 |
 
 DELIMITER |
-    CREATE TRIGGER update_entry BEFORE UPDATE ON entry FOR EACH ROW BEGIN
+    CREATE TRIGGER before_update_entry BEFORE UPDATE ON entry FOR EACH ROW BEGIN
         INSERT INTO entry_history (entry_id, body, ctime) VALUES (OLD.id, OLD.body, UNIX_TIMESTAMP(NOW()));
         SET NEW.mtime = UNIX_TIMESTAMP(NOW());
+        SET NEW.body_html = NULL;
     END
 |
 

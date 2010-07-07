@@ -5,20 +5,20 @@ package MyNote::Web;
 # extend context object
 package MyNote {
     use Text::Xslate qw/mark_raw/;
-    use Text::Xatena;
+    use MyNote::Formatter;
     use Encode;
     use Time::Piece;
+    use File::Spec;
+    our $is_devel = $ENV{PLACK_ENV} eq 'development' ? 1 : 0;
 
     my $xslate = Text::Xslate->new(
-        syntax   => 'TTerse',
-        path     => 'tmpl',
-        cache => 0,
+        syntax => 'TTerse',
+        path   => 'tmpl',
+        cache  => $is_devel ? 0 : 2,
+        cache_dir =>
+          File::Spec->catdir( File::Spec->tmpdir, "xslate.mynote.cache.$<" ),
         function => {
-            c       => sub { MyNote->context },
-            render_xatena => sub {
-                my ($src) = @_;
-                return mark_raw( Text::Xatena->new->format($src) );
-            },
+            c             => sub { MyNote->context },
             format_unixtime => sub {
                 my $t = shift;
                 Time::Piece->new($t)->strftime('%Y-%m-%d(%a) %H:%M');
@@ -83,6 +83,7 @@ package MyNote::Web {
             when ('/update') {
                 my $body = $req->param('body') // die "missing body";
                 $body = decode_utf8($body);
+                $body =~ s/\015\012/\012/g;
                 my $entry_id = $req->param('entry_id') // die "missing entry_id";
 
                 $c->dbh->do(q{UPDATE entry SET body=? WHERE id=?}, {}, $body, $entry_id) == 1 or return $c->show_error("cannot update entry");
@@ -93,6 +94,7 @@ package MyNote::Web {
             when ('/post') {
                 if (my $body = $req->param('body')) {
                     $body = decode_utf8($body);
+                    $body =~ s/\015\012/\012/g;
                     $c->dbh->do(q{INSERT INTO entry (body) VALUES (?)}, {}, $body);
                     $c->dbh->commit;
                 }

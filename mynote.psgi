@@ -6,6 +6,7 @@ use Plack::Loader;
 use Plack::Middleware::Static;
 use MyNote;
 use MyNote::Web;
+use Plack::Builder;
 
 sub sort_by(&@) {
     my $code = shift;
@@ -15,13 +16,13 @@ sub sort_by(&@) {
 my $app = builder {
     enable_if { $_[0]->{REMOTE_ADDR} eq '127.0.0.1' }
             "Plack::Middleware::ReverseProxy";
+    enable 'Plack::Middleware::Static',
+        path => qr{^/static/},
+        root => file(__FILE__)->dir->subdir('htdocs'),
+    ;
+    enable "Plack::Middleware::ContentLength";
     MyNote::Web->handler;
 };
-$app = Plack::Middleware::Static->wrap(
-    $app,
-    path => qr{^/static/},
-    root => file(__FILE__)->dir->subdir('htdocs'),
-);
 
 if ($0 eq __FILE__) {
     Plack::Loader->load('Standalone')->run($app);

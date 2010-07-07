@@ -13,6 +13,21 @@ package MyNote {
 };
 
 package MyNote::M::Entries {
+    use Text::Xslate qw/mark_raw/;
+
+    sub fill_body_html {
+        my ($class, $c, $entries) = @_;
+        for my $entry (@$entries) {
+            $entry->{body_html} //= do {
+                my $html = MyNote::Formatter->new->parse($entry->{body});
+                $c->dbh->do(q{UPDATE entry SET body_html=? WHERE id=?}, {}, $html, $entry->{id}) == 1 or die "cannot update";
+                $html;
+            };
+            $entry->{body_html} = mark_raw( $entry->{body_html} );
+        }
+        $c->dbh->commit;
+    }
+
     sub search {
         my ($class, $c, $entries_per_page, $page, $word) = @_;
         my $offset = $entries_per_page*($page-1);
@@ -26,6 +41,7 @@ package MyNote::M::Entries {
             { Slice => {} },
             $word, $entries_per_page+1, $offset
         );
+        $class->fill_body_html($c, $rows);
         my $has_next;
         if (@$rows == $entries_per_page+1) {
             pop @$rows;
@@ -39,6 +55,7 @@ package MyNote::M::Entries {
         my $offset = $entries_per_page*($page-1);
 
         my ($rows) = $c->dbh->selectall_arrayref(q{SELECT * FROM entry ORDER BY id DESC LIMIT ? OFFSET ?}, {Slice => {}}, $entries_per_page+1, $offset);
+        $class->fill_body_html($c, $rows);
         my $has_next;
         if (@$rows == $entries_per_page+1) {
             pop @$rows;
@@ -67,7 +84,7 @@ package MyNote::M::SearchHistory {
         }
         my @ret =
           map { +{ date => $_, words => $date_entries->{$_} } }
-          $date_entries->keys->sort;
+          $date_entries->keys->sort->reverse;
         return wantarray ? @ret : \@ret;
     }
     sub update {
