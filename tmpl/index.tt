@@ -29,11 +29,12 @@
             </form>
             <div class="entry-footer">
                 <a href="#" class="EditBtn" entry_id="[% entry.id %]">edit</a>
-                <span class="mtime">[% format_unixtime(entry.mtime) %]</span>
+                <span class="mtime"><a href="/entry/[% entry.id %]">[% format_unixtime(entry.mtime) %]</a></span>
             </div>
         </section>
         [% END %]
 
+        [% IF pager %]
         <div class="pager">
             [% IF pager.page()==1 %]
                 &lt;prev
@@ -46,6 +47,7 @@
                 next &gt;
             [% END %]
         </div>
+        [% END %]
     </div>
 </div>
 

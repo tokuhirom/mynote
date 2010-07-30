@@ -89,7 +89,7 @@ package MyNote::Web {
                 $c->dbh->do(q{UPDATE entry SET body=? WHERE id=?}, {}, $body, $entry_id) == 1 or return $c->show_error("cannot update entry");
                 $c->dbh->commit;
 
-                $c->redirect('/');
+                $c->redirect("/entry/$entry_id");
             }
             when ('/post') {
                 if (my $body = $req->param('body')) {
@@ -114,6 +114,11 @@ package MyNote::Web {
                 $c->dbh->commit(); # save history
 
                 $c->render('index.tt', {entries => $entries, word => $word, pager => $pager});
+            }
+            when (m{^/entry/(.+)}) {
+                my $entry_id = $1;
+                my $entry = MyNote::M::Entries->retrieve($c, $entry_id);
+                $c->render('index.tt', {entries => [$entry]});
             }
             default {
                 $c->return_404()

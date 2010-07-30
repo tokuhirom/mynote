@@ -63,6 +63,14 @@ package MyNote::M::Entries {
         }
         return ($rows, MyNote::Pager->new(has_next => $has_next, page => $page));
     }
+
+    sub retrieve {
+        my ($class, $c, $entry_id) = @_;
+
+        my ($rows) = $c->dbh->selectall_arrayref(q{SELECT * FROM entry WHERE id=? LIMIT 1}, {Slice => {}}, $entry_id);
+        $class->fill_body_html($c, $rows);
+        return $rows->[0];
+    }
 };
 
 package MyNote::Pager {
